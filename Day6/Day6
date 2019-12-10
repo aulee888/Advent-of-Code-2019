@@ -15,6 +15,7 @@ input4 = data4.split(',')
 
 # Test Case 4
 data5 = 'COM)B,B)C,C)D,D)E,E)F,B)G,G)H,D)I,E)J,J)K,K)L,K)YOU,I)SAN'
+input5 = data5.split(',')
 
 class Node:
     def __init__(self, value):
@@ -62,7 +63,7 @@ class Chain:
         while current.val != destination:
             count += 1
             current = current.next
-        return count - 2  # Subtract if counting YOU/SAN and to common point
+        return count # Subtract if counting YOU/SAN and to common point
 
 # Takes a chain with just the head at the top, and add a chain to it.
 # Does not count COM as an object, if an object orbits COM, its next value is None... for counting purposes
@@ -88,6 +89,7 @@ for orbital in input1:  # Change which data to run here
         chains[orbiter].head.next = chains[object].head
         chains[object].head.top = False
 
+
 # Answer to Part 1
 relationships = 0
 for chain in chains:
@@ -112,7 +114,5 @@ for object in same_positions:
 print(common_point)
 
 # Distance to NW4
-dist = chains['YOU'].to_point(common_point) + chains['SAN'].to_point(common_point)
+dist = chains['YOU'].to_point(common_point) + chains['SAN'].to_point(common_point) - 2
 print(dist)
-
-    
