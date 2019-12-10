@@ -6,10 +6,21 @@ input1 = data.split(',')
 # Test case
 input2 = ['COM)A', 'A)B', 'B)C']
 
+# Test Case 2
+input3 = ['A)B', 'B)C', 'D)A', 'COM)D']
+
+# Test Case 3
+data4 = 'COM)B,B)C,C)D,D)E,E)F,B)G,G)H,D)I,E)J,J)K,K)L'
+input4 = data4.split(',')
+
+# Test Case 4
+data5 = 'COM)B,B)C,C)D,D)E,E)F,B)G,G)H,D)I,E)J,J)K,K)L,K)YOU,I)SAN'
+
 class Node:
     def __init__(self, value):
         self.val = value
         self.next = None
+        self.top = True
 
     def get_data(self):
         return self.val
@@ -18,32 +29,90 @@ class Chain:
     def __init__(self):
         self.head = None
 
-    def add(self, item):
+    def add_node(self, item):
         temp = Node(item)
         temp.next = self.head
         self.head = temp
-
+        
     def printer(self):
         current = self.head
         while current != None:
             print(current.get_data())
             current = current.next
 
-objects = {}
-chains = []
+    def size(self):
+        current = self.head
+        count = 0
+        while current!= None:
+            count += 1
+            current = current.next
+        return count 
 
-chain1 = Chain()
+    def transfers(self):
+        current = self.head.next
+        objects = {}
+        while current!= None:
+            objects[current.val] = '*'
+            current = current.next
+        return objects
 
-for orbital in input2:  # Change which data to run here
+    def to_point(self, destination):
+        current = self.head
+        count = 0
+        while current.val != destination:
+            count += 1
+            current = current.next
+        return count - 2  # Subtract if counting YOU/SAN and to common point
+
+# Takes a chain with just the head at the top, and add a chain to it.
+# Does not count COM as an object, if an object orbits COM, its next value is None... for counting purposes
+chains = {}  # A dict that contains the head of a chain as the key, and the entire chain as the value
+chains_list = []
+
+for orbital in input1:  # Change which data to run here
     object = orbital[:orbital.find(')')]
     orbiter = orbital[orbital.find(')') + 1:]
 
-    if object not in objects:
-        objects[object] = Node(object)
-        chains.append(Chain.add(orbiter))
+    # If not already in chains {}, create it with its next value as empty
+    if orbiter not in chains:
+        chains[orbiter] = Chain() 
+        chains[orbiter].add_node(orbiter)
 
-    chain1.add(orbiter)
+    # Ensures that each node has a next value unless its COM, and adds the object's chain to the top of the chain (orbiter)
+    if object not in chains and object != 'COM':
+        chains[object] = Chain()
+        chains[object].add_node(object)
 
-chain1.printer()
+    # If an object gets added to an orbiter, changes the top status to false to indicate it isn't the top of a chain
+    if object != 'COM':
+        chains[orbiter].head.next = chains[object].head
+        chains[object].head.top = False
+
+# Answer to Part 1
+relationships = 0
+for chain in chains:
+    relationships += chains[chain].size()
+
+#print(relationships)
+
+YOU_transfers = chains['YOU'].transfers()
+SAN_transfers = chains['SAN'].transfers()
+
+same_positions = []
+for object in SAN_transfers:
+    if object in YOU_transfers:
+        same_positions.append(object)
+
+greatest_common = 0
+for object in same_positions:
+    if chains[object].size() > greatest_common:
+        common_point = object
+        greatest_common = chains[object].size()
+
+print(common_point)
+
+# Distance to NW4
+dist = chains['YOU'].to_point(common_point) + chains['SAN'].to_point(common_point)
+print(dist)
 
     
