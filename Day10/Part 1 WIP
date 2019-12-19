@@ -1,0 +1,42 @@
+map = '.#..#\
+.....\
+#####\
+....#\
+...##'
+
+class Asteroid:
+    def __init__(self, x, y, map: list[list]):
+        self.coor = (x, y)
+        self.scan = 0
+        self.locations = {}
+        self.locations[self.coor] = 'o'
+
+    def search():
+        
+
+map_list = [[map[i * 5 + j] for j in range(5)] for i in range(5)]
+
+asteroids = []
+for x in range(len(map_list)):
+
+    for y in range(len(map_list)):
+
+        if map_list[x][y] == '#':
+            asteroids.append(Asteroid(x, y, map_list))
+
+
+'''
+def dist(xo, yo, xf, yf):
+    slopes = {}
+    x_dir = xf - xo
+    y_dir = yf - yo
+
+    for i in range(1, x_dir + 1):
+        if x_dir % i == 0:
+            x = x_dir / i
+
+        for j in range(1, y_dir + 1):
+            if y_dir % i == 0:
+                y = x_dir / i
+                slopes[(x, y)] = '*'
+'''
