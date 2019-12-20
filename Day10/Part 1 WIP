@@ -34,7 +34,7 @@ def gcf(a, b):
 def lcd(a, b):
     div = gcf(a, b)
 
-    return a/div, b/div
+    return a/div, b/div  # Incorrect negative sorting affected by this line
 
 def test(map_list):
     asteroids = []
